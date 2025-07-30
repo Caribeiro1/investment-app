@@ -20,7 +20,7 @@ databases:
     plan: free
     ipAllowList: []
 
-jobs:
+CronJobs:
   - name: atualizar-cotacoes
     plan: free
     schedule: "0 8 * * *"
