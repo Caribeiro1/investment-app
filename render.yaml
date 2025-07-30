@@ -1,8 +1,9 @@
 
 services:
+  # --- WEB SERVICE ---
   - type: web
     name: carteira-financeira
-    env: python
+    runtime: python        # (pode manter "env: python", mas runtime é o formato novo)
     plan: free
     buildCommand: "pip install -r requirements.txt"
     startCommand: "uvicorn app.main:app --host 0.0.0.0 --port $PORT"
@@ -13,24 +14,25 @@ services:
           name: carteira-db
           property: connectionString
       - key: ALPHA_VANTAGE_KEY
+        sync: false            # adicione depois no painel
+
+  # --- CRON JOB ---
+  - type: cron
+    name: atualizar-cotacoes
+    runtime: python
+    plan: free
+    schedule: "0 8 * * *"       # 08 h todos os dias
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "python app/scheduler.py"
+    envVars:
+      - key: ALPHA_VANTAGE_KEY
         sync: false
+      - fromService:            # herdamos a mesma DATABASE_URL do web-service
+          name: carteira-financeira
+          type: web
+          envVarKey: DATABASE_URL
 
 databases:
   - name: carteira-db
     plan: free
     ipAllowList: []
-
-CronJobs:
-  - name: atualizar-cotacoes
-    plan: free
-    schedule: "0 8 * * *"
-    env: python
-    buildCommand: "pip install -r requirements.txt"
-    startCommand: "python app/scheduler.py"
-    envVars:
-      - fromService:
-          name: carteira-financeira
-          type: envVar
-          envVarName: DATABASE_URL
-      - key: ALPHA_VANTAGE_KEY
-        sync: false
