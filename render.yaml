@@ -1,6 +1,5 @@
 
 services:
-  # --- WEB SERVICE ---
   - type: web
     name: carteira-financeira
     runtime: python
@@ -13,25 +12,11 @@ services:
           name: carteira-db
           property: connectionString
       - key: ALPHA_VANTAGE_KEY
-        sync: false   # você adiciona o valor no painel depois
-
-  # --- CRON JOB ---
-  - type: cron
-    name: atualizar-cotacoes
-    runtime: python
-    schedule: "0 8 * * *"            # 08 h diariamente
-    buildCommand: "pip install -r requirements.txt"
-    startCommand: "python app/scheduler.py"
-    envVars:
-      - key: DATABASE_URL
-        fromDatabase:
-          name: carteira-db
-          property: connectionString
-      - key: ALPHA_VANTAGE_KEY
-        sync: false
+        sync: false          # valor será adicionado na Render
+      - key: CRON_SECRET
+        sync: false          # mesmo valor será usado no GitHub
 
 databases:
   - name: carteira-db
     plan: free
     ipAllowList: []
-
