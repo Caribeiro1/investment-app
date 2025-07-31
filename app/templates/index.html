@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><title>Carteira</title></head>
+<body>
+  <h1>Alocação de Ativos</h1>
+  <table border="1">
+    <tr>
+      {% for col in rows[0].keys() %}
+        <th>{{ col }}</th>
+      {% endfor %}
+    </tr>
+    {% for r in rows %}
+    <tr>
+      {% for v in r %}
+        <td>{{ v }}</td>
+      {% endfor %}
+    </tr>
+    {% endfor %}
+  </table>
+</body>
+</html>
