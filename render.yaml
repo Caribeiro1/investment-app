@@ -20,3 +20,6 @@ databases:
   - name: carteira-db
     plan: free
     ipAllowList: []
+buildCommand: |
+  pip install -r requirements.txt
+  python load_excel.py          # gera investments.db a cada build
